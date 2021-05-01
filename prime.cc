@@ -2,7 +2,6 @@
 #include <vector>
 #include <string>
 #include <chrono>
-#include <cmath>
 
 int main(int argc, char* argv[]) {
 	std::ios_base::sync_with_stdio(false);
@@ -35,15 +34,20 @@ int main(int argc, char* argv[]) {
 	}
 
 	std::vector<unsigned long long> prime {3};
+	size_t r {0};
+	auto square {prime[r]*prime[r]};
 
 	ceiling += 2;
 
 	auto time_s {std::chrono::steady_clock::now()};
 
 	for (unsigned long long i {7}; i <= ceiling; i+=6) {
-		auto root {std::sqrt(i)};
+		if (square <= i) {
+			++r;
+			square = prime[r]*prime[r];
+		}
 		for (auto i : {i-2, i}) {
-			for (size_t j {0}; j < prime.size() && root >= prime[j]; ++j)
+			for (size_t j {0}; j < r; ++j)
 				if (i % prime[j] == 0)
 					goto skip;
 			prime.push_back(i);
