@@ -1,8 +1,7 @@
 #!/usr/bin/env python3.8
 
 import sys
-import time
-import math
+from time import perf_counter
 
 if len(sys.argv) != 2:
 	print('usage:')
@@ -21,38 +20,29 @@ if ceiling < 3:
 	sys.exit(-3)
 
 prime = [3]
+x = 0
+square = prime[x]**2
 
-# start benchmark
-bench_start = time.perf_counter()
+bench_start = perf_counter()
 
-# range(start, end, step) does not include end
-# test only for 6k-1 and 6k+1
-# use (ceiling+1)+1 in case of ceiling = 6k-1
 for h in range(6, ceiling+2, 6):
+	if square < h:
+		x += 1
+		square = prime[x]**2
 	for i in [h-1, h+1]:
-		# test only against factors less than the square root
-		root = math.sqrt(i)
-		for j in prime:
-			if j > root:
+		for j in range(0, x+1):
+			if i % prime[j] == 0:
+				break
+		else:
 				prime.append(i)
-				break
-			if i % j == 0:
-				break
 
-# end of benchmark
-bench_end = time.perf_counter()
+bench_end = perf_counter()
 
-# when ceiling = {6k-1, 6k}, remove 6k+1
 if prime[-1] > ceiling:
 	prime.pop()
 
-# prepend 2 to the prime list since it was skipped
 prime.insert(0, 2)
-
 print(prime)
 print('Number of, primes less than or equal to {0}, found: {1}'.format(ceiling, len(prime)))
-
-# benchmark report
 print('Time elapsed: {:f}s'.format(bench_end-bench_start))
-
 sys.exit(0)
