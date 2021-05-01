@@ -2,6 +2,7 @@
 
 import sys
 import time
+import math
 
 if len(sys.argv) != 2:
 	print('usage:')
@@ -15,24 +16,26 @@ except:
 	print('Fail to parse ceiling ({}) as integer.'.format(sys.argv[1]))
 	sys.exit(-2)
 
-if ceiling < 2:
-	print('Minimum ceiling value is 2.')
+if ceiling < 3:
+	print('Minimum ceiling value is 3.')
 	sys.exit(-3)
 
-prime = []
+prime = [3]
 
 # start benchmark
 bench_start = time.perf_counter()
 
 # range(start, end, step) does not include end
 # step = 2 to avoid checking even numbers
-for i in range(3, ceiling + 1, 2):
+for i in range(5, ceiling + 1, 2):
+	# test only against factors less than the square root
+	root = math.sqrt(i)
 	for j in prime:
+		if j > root:
+			prime.append(i)
+			break
 		if i % j == 0:
 			break
-	# else after for loop don't execute when exit with break
-	else:
-		prime.append(i)
 
 # end of benchmark
 bench_end = time.perf_counter()
