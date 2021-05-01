@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.8
 
 import sys
+import time
 
 if len(sys.argv) != 2:
 	print('usage:')
@@ -16,6 +17,9 @@ except:
 
 prime = []
 
+# start benchmark
+bench_start = time.perf_counter()
+
 # range(start, end) does not include end
 for i in range(2, ceiling + 1):
 	for j in prime:
@@ -25,7 +29,13 @@ for i in range(2, ceiling + 1):
 	else:
 		prime.append(i)
 
+# end of benchmark
+bench_end = time.perf_counter()
+
 print(prime)
+
+# benchmark report
+print('Time elapsed: {:f}s'.format(bench_end - bench_start))
 
 print('Hello, world!')
 sys.exit(0)
