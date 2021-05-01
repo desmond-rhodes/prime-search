@@ -15,13 +15,18 @@ except:
 	print('Fail to parse ceiling ({}) as integer.'.format(sys.argv[1]))
 	sys.exit(-2)
 
+if ceiling < 2:
+	print('Minimum ceiling value is 2.')
+	sys.exit(-3)
+
 prime = []
 
 # start benchmark
 bench_start = time.perf_counter()
 
-# range(start, end) does not include end
-for i in range(2, ceiling + 1):
+# range(start, end, step) does not include end
+# step = 2 to avoid checking even numbers
+for i in range(3, ceiling + 1, 2):
 	for j in prime:
 		if i % j == 0:
 			break
@@ -32,10 +37,13 @@ for i in range(2, ceiling + 1):
 # end of benchmark
 bench_end = time.perf_counter()
 
+# prepend 2 to the prime list since it was skipped
+prime.insert(0, 2)
+
 print(prime)
+print('Number of, primes less than {0}, found: {1}'.format(ceiling, len(prime)))
 
 # benchmark report
 print('Time elapsed: {:f}s'.format(bench_end - bench_start))
 
-print('Hello, world!')
 sys.exit(0)
