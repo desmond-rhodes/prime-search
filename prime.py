@@ -7,7 +7,7 @@ import math
 if len(sys.argv) != 2:
 	print('usage:')
 	print('    (ceiling)')
-	print('        Find primes less than ceiling.')
+	print('        Find primes less than or equal to ceiling.')
 	sys.exit(-1)
 
 try:
@@ -26,27 +26,33 @@ prime = [3]
 bench_start = time.perf_counter()
 
 # range(start, end, step) does not include end
-# step = 2 to avoid checking even numbers
-for i in range(5, ceiling + 1, 2):
-	# test only against factors less than the square root
-	root = math.sqrt(i)
-	for j in prime:
-		if j > root:
-			prime.append(i)
-			break
-		if i % j == 0:
-			break
+# test only for 6k-1 and 6k+1
+# use (ceiling+1)+1 in case of ceiling = 6k-1
+for h in range(6, ceiling+2, 6):
+	for i in [h-1, h+1]:
+		# test only against factors less than the square root
+		root = math.sqrt(i)
+		for j in prime:
+			if j > root:
+				prime.append(i)
+				break
+			if i % j == 0:
+				break
 
 # end of benchmark
 bench_end = time.perf_counter()
+
+# when ceiling = {6k-1, 6k}, remove 6k+1
+if prime[-1] > ceiling:
+	prime.pop()
 
 # prepend 2 to the prime list since it was skipped
 prime.insert(0, 2)
 
 print(prime)
-print('Number of, primes less than {0}, found: {1}'.format(ceiling, len(prime)))
+print('Number of, primes less than or equal to {0}, found: {1}'.format(ceiling, len(prime)))
 
 # benchmark report
-print('Time elapsed: {:f}s'.format(bench_end - bench_start))
+print('Time elapsed: {:f}s'.format(bench_end-bench_start))
 
 sys.exit(0)
