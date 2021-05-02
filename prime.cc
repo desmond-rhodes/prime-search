@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
 
 	unsigned long long ceiling {0};
 	try {
-		// stoull don't throw out_of_range on negative
+		/* stoull don't throw out_of_range on negative */
 		if (args[0][0] == '-')
 			throw -1;
 		ceiling = std::stoull(args[0]);
@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
 	size_t r {0};
 	auto square {prime[r]*prime[r]};
 
-	auto time_s {std::chrono::steady_clock::now()};
+	auto time_0 {std::chrono::steady_clock::now()};
 
 	for (unsigned long long i {11}; i <= ceiling; i+=6) {
 		for (auto i : {i, i+2}) {
@@ -53,11 +53,16 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	auto time_e {std::chrono::steady_clock::now()};
-	std::chrono::duration<double, std::milli> time_d {time_e-time_s};
+	auto time_1 {std::chrono::steady_clock::now()};
+	std::chrono::duration<double> time_d {time_1-time_0};
 
 	if (prime.back() > ceiling)
 		prime.pop_back();
+
+	auto time_h {std::chrono::duration_cast<std::chrono::hours>(time_d/3600)};
+	auto time_m {std::chrono::duration_cast<std::chrono::minutes>(time_d/60-time_h)};
+	auto time_s {std::chrono::duration_cast<std::chrono::seconds>(time_d-time_h-time_m)};
+	auto time_f {std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(time_d)-time_h-time_m-time_s};
 
 	std::cout << "[2, 3";
 	for (auto i : prime)
@@ -65,7 +70,7 @@ int main(int argc, char* argv[]) {
 	std::cout << "]\n";
 
 	std::cout << "Number of, primes less than or equal to " << ceiling << ", found: " << prime.size()+2 << '\n';
-	std::cout << "Time elapsed: " << time_d.count() << "ms\n";
+	std::cout << "Time elapsed: " << time_h.count() << "h " << time_m.count() << "m " << time_s.count() << "s " << time_f.count() << "ms\n";
 
 	return 0;
 }
