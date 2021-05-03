@@ -128,11 +128,11 @@ void generate_report(
 void format_duration(std::chrono::duration<double> const& duration) {
 	auto hours {
 		std::chrono::duration_cast<std::chrono::hours>
-		(duration/3600)
+		(duration)
 	};
 	auto minutes {
 		std::chrono::duration_cast<std::chrono::minutes>
-		(duration/60-hours)
+		(duration-hours)
 	};
 	auto seconds {
 		std::chrono::duration_cast<std::chrono::seconds>
@@ -140,15 +140,15 @@ void format_duration(std::chrono::duration<double> const& duration) {
 	};
 	auto milliseconds {
 		std::chrono::duration_cast<std::chrono::milliseconds>
-		(duration)-hours-minutes-seconds
+		(duration-hours-minutes-seconds)
 	};
 	auto microseconds {
 		std::chrono::duration_cast<std::chrono::microseconds>
-		(duration)-hours-minutes-seconds-milliseconds
+		(duration-hours-minutes-seconds-milliseconds)
 	};
 	auto nanoseconds {
 		std::chrono::duration_cast<std::chrono::duration<double, std::nano>>
-		(duration)-hours-minutes-seconds-milliseconds-microseconds
+		(duration-hours-minutes-seconds-milliseconds-microseconds)
 	};
 	std::cout
 		<< hours.count() << "h "
